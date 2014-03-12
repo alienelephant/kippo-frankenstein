@@ -124,8 +124,8 @@ class HoneyPotShell(object):
                 rargs.append(arg)
         cmdclass = self.honeypot.getCommand(cmd, envvars['PATH'].split(':'))
         if cmdclass:
-            print 'Command found: %s' % (line,)
-            self.honeypot.logDispatch('Command found: %s' % (line,))
+            # print 'Command found: %s' % (line,)
+            # self.honeypot.logDispatch('Command found: %s' % (line,))
             self.honeypot.call_command(cmdclass, *rargs)
         else:
             self.honeypot.logDispatch('Command not found: %s' % (line,))
