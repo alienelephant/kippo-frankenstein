@@ -5,6 +5,7 @@ import sys, os, random, pickle, time, stat, shlex, anydbm, struct, copy
 from zope.interface import implements
 
 import twisted
+import twisted.conch.ls
 from twisted.cred import checkers, credentials, error
 from twisted.conch import avatar, recvline, interfaces as conchinterfaces
 from twisted.conch.ssh import factory, userauth, session, transport
@@ -123,8 +124,8 @@ class HoneyPotShell(object):
                 rargs.append(arg)
         cmdclass = self.honeypot.getCommand(cmd, envvars['PATH'].split(':'))
         if cmdclass:
-            print 'Command found: %s' % (line,)
-            self.honeypot.logDispatch('Command found: %s' % (line,))
+            # print 'Command found: %s' % (line,)
+            # self.honeypot.logDispatch('Command found: %s' % (line,))
             self.honeypot.call_command(cmdclass, *rargs)
         else:
             self.honeypot.logDispatch('Command not found: %s' % (line,))
@@ -277,21 +278,21 @@ class HoneyPotProtocol(recvline.HistoricRecvLine):
         else:
             self.clientIP = self.realClientIP
 
+        if self.execcmd != None:
+            print 'Running exec cmd "%s"' % self.execcmd
+            self.cmdstack[0].lineReceived(self.execcmd)
+            self.terminal.transport.session.conn.sendRequest(self.terminal.transport.session, 'exit-status', struct.pack('>L', 0))
+            self.terminal.transport.session.conn.sendClose(self.terminal.transport.session)
+            return
+            # self.terminal.transport.session.conn.sendEOF(self)
+
+        # key handlers after execcmd so they don't distrub binary stdin
         self.keyHandlers.update({
             '\x04':     self.handle_CTRL_D,
             '\x15':     self.handle_CTRL_U,
             '\x03':     self.handle_CTRL_C,
             '\x09':     self.handle_TAB,
             })
-
-        if self.execcmd != None:
-            print 'Running exec cmd "%s"' % self.execcmd
-            self.cmdstack[0].lineReceived(self.execcmd)
-            self.terminal.transport.session.conn.sendRequest(self.terminal.transport.session, 'exit-status', struct.pack('>L', 0))
-            self.terminal.transport.session.conn.sendClose(self.terminal.transport.session)
-            self.execcmd = None
-            return
-            # self.terminal.transport.session.conn.sendEOF(self)
             # self.terminal.transport.session.conn.transport.loseConnection()
 
     def displayMOTD(self):
@@ -348,15 +349,11 @@ class HoneyPotProtocol(recvline.HistoricRecvLine):
         return None
 
     def lineReceived(self, line):
+        # don't execute additional commands after execcmd 
+        if self.execcmd != None:
+            return
         if len(self.cmdstack):
             self.cmdstack[-1].lineReceived(line)
-
-    def keystrokeReceived(self, keyID, modifier):
-        transport = self.terminal.transport.session.conn.transport
-        if type(keyID) == type(''):
-            ttylog.ttylog_write(transport.ttylog_file, len(keyID),
-                ttylog.TYPE_INPUT, time.time(), keyID)
-        recvline.HistoricRecvLine.keystrokeReceived(self, keyID, modifier)
 
     # Easier way to implement password input?
     def characterReceived(self, ch, moreCharactersComing):
@@ -440,6 +437,13 @@ class LoggingServerProtocol(insults.ServerProtocol):
                 ttylog.TYPE_OUTPUT, time.time(), bytes)
         insults.ServerProtocol.write(self, bytes)
 
+    def dataReceived(self, data, noLog = False):
+        transport = self.transport.session.conn.transport
+        if transport.ttylog_open and not noLog:
+            ttylog.ttylog_write(transport.ttylog_file, len(data),
+                ttylog.TYPE_INPUT, time.time(), data)
+        insults.ServerProtocol.dataReceived(self, data)
+
     # this doesn't seem to be called upon disconnect, so please use 
     # HoneyPotTransport.connectionLost instead
     def connectionLost(self, reason):
@@ -459,6 +463,7 @@ class HoneyPotAvatar(avatar.ConchUser):
         self.username = username
         self.env = env
         self.channelLookup.update({'session': HoneyPotSSHSession})
+        self.windowSize = [80,24]
 
         # disabled by default
         if self.env.cfg.has_option('honeypot', 'sftp_enabled'):
@@ -693,12 +698,15 @@ class HoneyPotSSHFactory(factory.SSHFactory):
             self.dbloggers.append(dblogger)
 
     def buildProtocol(self, addr):
-        # FIXME: try to mimic something real 100%
+        cfg = config()
+
         t = HoneyPotTransport()
+        if cfg.has_option('honeypot', 'ssh_version_string'):
+            t.ourVersionString = cfg.get('honeypot','ssh_version_string')
+        else:
+            t.ourVersionString = "SSH-2.0-OpenSSH_5.1p1 Debian-5"
 
-        t.ourVersionString = 'SSH-2.0-OpenSSH_6.0p1 Debian-4'
         t.supportedPublicKeys = self.privateKeys.keys()
-
         if not self.primes:
             ske = t.supportedKeyExchanges[:]
             ske.remove('diffie-hellman-group-exchange-sha1')
@@ -786,8 +794,8 @@ class KippoSFTPFile:
 
     def __init__(self, server, filename, flags, attrs):
         self.server = server
-	self.filename = filename
-	self.transfer_completed = 0
+        self.filename = filename
+        self.transfer_completed = 0
         self.bytes_written = 0
         openFlags = 0
         if flags & FXF_READ == FXF_READ and flags & FXF_WRITE == 0:
@@ -827,8 +835,8 @@ class KippoSFTPFile:
         return self.contents[offset:offset+length]
 
     def writeChunk(self, offset, data):
-	self.server.fs.lseek(self.fd, offset, os.SEEK_SET)
-	self.server.fs.write(self.fd, data)
+        self.server.fs.lseek(self.fd, offset, os.SEEK_SET)
+        self.server.fs.write(self.fd, data)
         self.bytes_written += len(data)
 
     def getAttrs(self):
@@ -866,8 +874,8 @@ class KippoSFTPServer:
     implements(conchinterfaces.ISFTPServer)
  
     def __init__(self, avatar):
-	self.avatar = avatar
-	# FIXME we should not copy fs here, but do this at avatar instantiation
+        self.avatar = avatar
+        # FIXME we should not copy fs here, but do this at avatar instantiation
         self.fs = fs.HoneyPotFilesystem(copy.deepcopy(self.avatar.env.fs))
 
     def _absPath(self, path):
@@ -880,7 +888,7 @@ class KippoSFTPServer:
         if attrs.has_key("permissions"):
             self.fs.chmod(path, attrs["permissions"])
         if attrs.has_key("atime") and attrs.has_key("mtime"):
-            self.fs.utime(path, (attrs["atime"], attrs["mtime"]))
+            self.fs.utime(path, attrs["atime"], attrs["mtime"])
 
     def _getAttrs(self, s):
         return {
@@ -896,34 +904,34 @@ class KippoSFTPServer:
         return {}
 
     def openFile(self, filename, flags, attrs):
-	print "SFTP openFile: %s" % filename
+        print "SFTP openFile: %s" % filename
         return KippoSFTPFile(self, self._absPath(filename), flags, attrs)
 
     def removeFile(self, filename):
-	print "SFTP removeFile: %s" % filename
-	return self.fs.remove(self._absPath(filename))
+        print "SFTP removeFile: %s" % filename
+        return self.fs.remove(self._absPath(filename))
 
     def renameFile(self, oldpath, newpath):
-	print "SFTP renameFile: %s %s" % (oldpath, newpath) 
+        print "SFTP renameFile: %s %s" % (oldpath, newpath) 
         return self.fs.rename(self._absPath(oldpath), self._absPath(newpath))
 
     def makeDirectory(self, path, attrs):
-	print "SFTP makeDirectory: %s" % path
+        print "SFTP makeDirectory: %s" % path
         path = self._absPath(path)
         self.fs.mkdir2(path)
         self._setAttrs(path, attrs)
         return 
 
     def removeDirectory(self, path):
-	print "SFTP removeDirectory: %s" % path
-	return self.fs.rmdir(self._absPath(path))
+        print "SFTP removeDirectory: %s" % path
+        return self.fs.rmdir(self._absPath(path))
 
     def openDirectory(self, path):
-	print "SFTP OpenDirectory: %s" % path
+        print "SFTP OpenDirectory: %s" % path
         return KippoSFTPDirectory(self, self._absPath(path))
 
     def getAttrs(self, path, followLinks):
-	print "SFTP getAttrs: %s" % path
+        print "SFTP getAttrs: %s" % path
         path = self._absPath(path)
         if followLinks:
             s = self.fs.stat(path)
@@ -932,23 +940,23 @@ class KippoSFTPServer:
         return self._getAttrs(s)
 
     def setAttrs(self, path, attrs):
-	print "SFTP setAttrs: %s" % path
+        print "SFTP setAttrs: %s" % path
         path = self._absPath(path)
-	return self._setAttrs(path, attrs)
+        return self._setAttrs(path, attrs)
 
     def readLink(self, path):
-	print "SFTP readLink: %s" % path
+        print "SFTP readLink: %s" % path
         path = self._absPath(path)
-	return self.fs.readlink(path)
+        return self.fs.readlink(path)
 
     def makeLink(self, linkPath, targetPath):
-	print "SFTP makeLink: %s" % path
+        print "SFTP makeLink: %s" % path
         linkPath = self._absPath(linkPath)
         targetPath = self._absPath(targetPath)
-	return self.fs.symlink(targetPath, linkPath)
+        return self.fs.symlink(targetPath, linkPath)
 
     def realPath(self, path):
-	print "SFTP realPath: %s" % path
+        print "SFTP realPath: %s" % path
         return self.fs.realpath(self._absPath(path))
 
     def extendedRequest(self, extName, extData):
