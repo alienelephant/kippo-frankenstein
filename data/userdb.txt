@@ -1,2 +1,15 @@
 root:0:*
+root:0:root
 oracle:500:*
+admin:1002:@dmin
+bin:2:worlddomination
+bitcoin:1002:bitcoin
+apache:3:apache
+oracle:1001:oracle
+oracle:1001:password
+db2inst1:1001:db2inst1
+postgres:1001:postgres
+mysql:1001:mysql
+demo:500:demo
+nagios:213:nagios
+web:214:password

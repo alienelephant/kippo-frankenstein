@@ -165,6 +165,7 @@ class HoneyPotShell(object):
 
     # Tab completion
     def handle_TAB(self):
+        return
         if not len(self.honeypot.lineBuffer):
             return
         l = ''.join(self.honeypot.lineBuffer)
@@ -256,6 +257,15 @@ class HoneyPotProtocol(recvline.HistoricRecvLine):
         transport = self.terminal.transport.session.conn.transport
         msg = ':dispatch: ' + msg
         transport.factory.logDispatch(transport.transport.sessionno, msg)
+
+    def keystrokeReceived(self, keyID, modifier):
+        m = self.keyHandlers.get(keyID)
+        if m is not None:
+            m()
+        elif keyID in self._printableChars:
+            self.characterReceived(keyID, False)
+        else:
+            log.msg("Received unhandled keyID: %r" % (keyID,))
 
     def connectionMade(self):
         recvline.HistoricRecvLine.connectionMade(self)
@@ -395,6 +405,7 @@ class HoneyPotProtocol(recvline.HistoricRecvLine):
         self.call_command(self.commands['exit'])
 
     def handle_TAB(self):
+        return
         self.cmdstack[-1].handle_TAB()
 
     def addInteractor(self, interactor):
