@@ -5,6 +5,7 @@ import sys, os, random, pickle, time, stat, shlex, anydbm, struct, copy
 from zope.interface import implements
 
 import twisted
+import twisted.conch.ls
 from twisted.cred import checkers, credentials, error
 from twisted.conch import avatar, recvline, interfaces as conchinterfaces
 from twisted.conch.ssh import factory, userauth, session, transport
@@ -123,8 +124,8 @@ class HoneyPotShell(object):
                 rargs.append(arg)
         cmdclass = self.honeypot.getCommand(cmd, envvars['PATH'].split(':'))
         if cmdclass:
-            print 'Command found: %s' % (line,)
-            self.honeypot.logDispatch('Command found: %s' % (line,))
+            # print 'Command found: %s' % (line,)
+            # self.honeypot.logDispatch('Command found: %s' % (line,))
             self.honeypot.call_command(cmdclass, *rargs)
         else:
             self.honeypot.logDispatch('Command not found: %s' % (line,))
@@ -549,6 +550,8 @@ class HoneyPotRealm:
 class HoneyPotTransport(transport.SSHServerTransport):
 
     hadVersion = False
+    transport.SSHServerTransport.supportedPublicKeys = ['ssh-rsa', 'ssh-dss']
+    transport.SSHServerTransport.supportedCompressions = ['none', 'zlib@openssh.com']
 
     def connectionMade(self):
         print 'New connection: %s:%s (%s:%s) [session: %d]' % \
@@ -706,12 +709,15 @@ class HoneyPotSSHFactory(factory.SSHFactory):
             self.dbloggers.append(dblogger)
 
     def buildProtocol(self, addr):
-        # FIXME: try to mimic something real 100%
+        cfg = config()
+
         t = HoneyPotTransport()
+        if cfg.has_option('honeypot', 'ssh_version_string'):
+            t.ourVersionString = cfg.get('honeypot','ssh_version_string')
+        else:
+            t.ourVersionString = "SSH-2.0-OpenSSH_5.1p1 Debian-5"
 
-        t.ourVersionString = 'SSH-2.0-OpenSSH_5.1p1 Debian-5'
         t.supportedPublicKeys = self.privateKeys.keys()
-
         if not self.primes:
             ske = t.supportedKeyExchanges[:]
             ske.remove('diffie-hellman-group-exchange-sha1')
@@ -893,7 +899,7 @@ class KippoSFTPServer:
         if attrs.has_key("permissions"):
             self.fs.chmod(path, attrs["permissions"])
         if attrs.has_key("atime") and attrs.has_key("mtime"):
-            self.fs.utime(path, (attrs["atime"], attrs["mtime"]))
+            self.fs.utime(path, attrs["atime"], attrs["mtime"])
 
     def _getAttrs(self, s):
         return {
