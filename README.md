@@ -14,8 +14,11 @@ Extra Code merged from (or will be):
 
 When this acutally works I'll create a real readme. Until that time, don't use this. Really.
 
-# Changes
+# Notable Changes
 
-1. 06-25-2014 Removed "logoff" trick, honeypot just exists cleanly on user logout
-2. 06-25-2014 Merged hpfeeds support and added appropriate kippo.cfg entry (https://github.com/rep/hpfeeds/tree/master/appsupport/kippo
-)
+1. Removed "logoff" trick, honeypot just exists cleanly on user logout
+2. Merged hpfeeds support and added appropriate kippo.cfg entry (https://github.com/rep/hpfeeds/tree/master/appsupport/kippo)
+3. Add commands: which, env
+4. Add empty output for commands: bash -c, umask, alias
+5. Removed 'exxxit' command
+6. Added prompt patches from https://github.com/g0tmi1k/kippo-patches/blob/master/shell_prompt.patch
