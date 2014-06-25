@@ -250,3 +250,89 @@
 	reason: disconnected by user
 2014-06-25 02:06:52-0700 [HoneyPotTransport,0,127.0.0.1] connection lost
 2014-06-25 02:06:52-0700 [HoneyPotTransport,0,127.0.0.1] publishing metadata to hpfeeds
+2014-06-25 02:19:06-0700 [-] Received SIGTERM, shutting down.
+2014-06-25 02:19:06-0700 [-] (TCP Port 2222 Closed)
+2014-06-25 02:19:06-0700 [-] Stopping factory <kippo.core.honeypot.HoneyPotSSHFactory instance at 0x9cda9cc>
+2014-06-25 02:19:06-0700 [-] Main loop terminated.
+2014-06-25 02:19:06-0700 [-] Server Shut Down.
+2014-06-25 02:19:16-0700 [-] Log opened.
+2014-06-25 02:19:16-0700 [-] twistd 12.0.0 (/usr/bin/python 2.7.3) starting up.
+2014-06-25 02:19:16-0700 [-] reactor class: twisted.internet.pollreactor.PollReactor.
+2014-06-25 02:19:16-0700 [-] HoneyPotSSHFactory starting on 2222
+2014-06-25 02:19:16-0700 [-] Starting factory <kippo.core.honeypot.HoneyPotSSHFactory instance at 0x886cc6c>
+2014-06-25 02:19:21-0700 [kippo.core.honeypot.HoneyPotSSHFactory] New connection: 127.0.0.1:46221 (127.0.0.1:2222) [session: 0]
+2014-06-25 02:19:21-0700 [HoneyPotTransport,0,127.0.0.1] Remote SSH version: SSH-2.0-OpenSSH_6.0p1 Debian-4
+2014-06-25 02:19:21-0700 [HoneyPotTransport,0,127.0.0.1] kex alg, key alg: diffie-hellman-group1-sha1 ssh-rsa
+2014-06-25 02:19:21-0700 [HoneyPotTransport,0,127.0.0.1] outgoing: aes128-ctr hmac-md5 none
+2014-06-25 02:19:21-0700 [HoneyPotTransport,0,127.0.0.1] incoming: aes128-ctr hmac-md5 none
+2014-06-25 02:19:21-0700 [HoneyPotTransport,0,127.0.0.1] connection lost
+2014-06-25 02:19:21-0700 [HoneyPotTransport,0,127.0.0.1] publishing metadata to hpfeeds
+2014-06-25 02:19:42-0700 [kippo.core.honeypot.HoneyPotSSHFactory] New connection: 127.0.0.1:46222 (127.0.0.1:2222) [session: 1]
+2014-06-25 02:19:42-0700 [HoneyPotTransport,1,127.0.0.1] Remote SSH version: SSH-2.0-OpenSSH_6.0p1 Debian-4
+2014-06-25 02:19:42-0700 [HoneyPotTransport,1,127.0.0.1] kex alg, key alg: diffie-hellman-group1-sha1 ssh-rsa
+2014-06-25 02:19:42-0700 [HoneyPotTransport,1,127.0.0.1] outgoing: aes128-ctr hmac-md5 none
+2014-06-25 02:19:42-0700 [HoneyPotTransport,1,127.0.0.1] incoming: aes128-ctr hmac-md5 none
+2014-06-25 02:19:45-0700 [HoneyPotTransport,1,127.0.0.1] NEW KEYS
+2014-06-25 02:19:45-0700 [HoneyPotTransport,1,127.0.0.1] starting service ssh-userauth
+2014-06-25 02:19:45-0700 [SSHService ssh-userauth on HoneyPotTransport,1,127.0.0.1] apache trying auth none
+2014-06-25 02:19:45-0700 [SSHService ssh-userauth on HoneyPotTransport,1,127.0.0.1] apache trying auth keyboard-interactive
+2014-06-25 02:19:46-0700 [SSHService ssh-userauth on HoneyPotTransport,1,127.0.0.1] login attempt [apache/apache] succeeded
+2014-06-25 02:19:46-0700 [SSHService ssh-userauth on HoneyPotTransport,1,127.0.0.1] apache authenticated with keyboard-interactive
+2014-06-25 02:19:46-0700 [SSHService ssh-userauth on HoneyPotTransport,1,127.0.0.1] starting service ssh-connection
+2014-06-25 02:19:46-0700 [SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] got channel session request
+2014-06-25 02:19:46-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] channel open
+2014-06-25 02:19:46-0700 [SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] got global no-more-sessions@openssh.com request
+2014-06-25 02:19:46-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] pty request: screen (73, 230, 0, 0)
+2014-06-25 02:19:46-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] Terminal size: 73 230
+2014-06-25 02:19:46-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] request_env: LANG=en_US.UTF-8
+2014-06-25 02:19:46-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] getting shell
+2014-06-25 02:19:46-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] Opening TTY log: log/tty/20140625-021946-4815.log
+2014-06-25 02:19:47-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] /etc/motd resolved into /etc/motd
+2014-06-25 02:19:49-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] CMD: ls
+2014-06-25 02:19:52-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] CMD: su
+2014-06-25 02:19:53-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] CMD: su -
+2014-06-25 02:19:55-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] sending close 0
+2014-06-25 02:19:55-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,1,127.0.0.1] remote close
+2014-06-25 02:19:55-0700 [HoneyPotTransport,1,127.0.0.1] Got remote error, code 11
+	reason: disconnected by user
+2014-06-25 02:19:55-0700 [HoneyPotTransport,1,127.0.0.1] connection lost
+2014-06-25 02:19:55-0700 [HoneyPotTransport,1,127.0.0.1] publishing metadata to hpfeeds
+2014-06-25 02:19:57-0700 [kippo.core.honeypot.HoneyPotSSHFactory] New connection: 127.0.0.1:46223 (127.0.0.1:2222) [session: 2]
+2014-06-25 02:19:57-0700 [HoneyPotTransport,2,127.0.0.1] Remote SSH version: SSH-2.0-OpenSSH_6.0p1 Debian-4
+2014-06-25 02:19:57-0700 [HoneyPotTransport,2,127.0.0.1] kex alg, key alg: diffie-hellman-group1-sha1 ssh-rsa
+2014-06-25 02:19:57-0700 [HoneyPotTransport,2,127.0.0.1] outgoing: aes128-ctr hmac-md5 none
+2014-06-25 02:19:57-0700 [HoneyPotTransport,2,127.0.0.1] incoming: aes128-ctr hmac-md5 none
+2014-06-25 02:19:57-0700 [HoneyPotTransport,2,127.0.0.1] NEW KEYS
+2014-06-25 02:19:57-0700 [HoneyPotTransport,2,127.0.0.1] starting service ssh-userauth
+2014-06-25 02:19:57-0700 [SSHService ssh-userauth on HoneyPotTransport,2,127.0.0.1] apache trying auth none
+2014-06-25 02:19:57-0700 [SSHService ssh-userauth on HoneyPotTransport,2,127.0.0.1] apache trying auth keyboard-interactive
+2014-06-25 02:19:58-0700 [HoneyPotTransport,2,127.0.0.1] connection lost
+2014-06-25 02:19:58-0700 [HoneyPotTransport,2,127.0.0.1] publishing metadata to hpfeeds
+2014-06-25 02:20:03-0700 [kippo.core.honeypot.HoneyPotSSHFactory] New connection: 127.0.0.1:46224 (127.0.0.1:2222) [session: 3]
+2014-06-25 02:20:03-0700 [HoneyPotTransport,3,127.0.0.1] Remote SSH version: SSH-2.0-OpenSSH_6.0p1 Debian-4
+2014-06-25 02:20:03-0700 [HoneyPotTransport,3,127.0.0.1] kex alg, key alg: diffie-hellman-group1-sha1 ssh-rsa
+2014-06-25 02:20:03-0700 [HoneyPotTransport,3,127.0.0.1] outgoing: aes128-ctr hmac-md5 none
+2014-06-25 02:20:03-0700 [HoneyPotTransport,3,127.0.0.1] incoming: aes128-ctr hmac-md5 none
+2014-06-25 02:20:03-0700 [HoneyPotTransport,3,127.0.0.1] NEW KEYS
+2014-06-25 02:20:03-0700 [HoneyPotTransport,3,127.0.0.1] starting service ssh-userauth
+2014-06-25 02:20:03-0700 [SSHService ssh-userauth on HoneyPotTransport,3,127.0.0.1] root trying auth none
+2014-06-25 02:20:03-0700 [SSHService ssh-userauth on HoneyPotTransport,3,127.0.0.1] root trying auth keyboard-interactive
+2014-06-25 02:20:06-0700 [SSHService ssh-userauth on HoneyPotTransport,3,127.0.0.1] login attempt [root/asd] succeeded
+2014-06-25 02:20:06-0700 [SSHService ssh-userauth on HoneyPotTransport,3,127.0.0.1] root authenticated with keyboard-interactive
+2014-06-25 02:20:06-0700 [SSHService ssh-userauth on HoneyPotTransport,3,127.0.0.1] starting service ssh-connection
+2014-06-25 02:20:06-0700 [SSHService ssh-connection on HoneyPotTransport,3,127.0.0.1] got channel session request
+2014-06-25 02:20:06-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,3,127.0.0.1] channel open
+2014-06-25 02:20:06-0700 [SSHService ssh-connection on HoneyPotTransport,3,127.0.0.1] got global no-more-sessions@openssh.com request
+2014-06-25 02:20:06-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,3,127.0.0.1] pty request: screen (73, 230, 0, 0)
+2014-06-25 02:20:06-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,3,127.0.0.1] Terminal size: 73 230
+2014-06-25 02:20:06-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,3,127.0.0.1] request_env: LANG=en_US.UTF-8
+2014-06-25 02:20:06-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,3,127.0.0.1] getting shell
+2014-06-25 02:20:06-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,3,127.0.0.1] Opening TTY log: log/tty/20140625-022006-7845.log
+2014-06-25 02:20:07-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,3,127.0.0.1] /etc/motd resolved into /etc/motd
+2014-06-25 02:20:11-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,3,127.0.0.1] CMD: su apache
+2014-06-25 02:20:14-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,3,127.0.0.1] sending close 0
+2014-06-25 02:20:14-0700 [SSHChannel session (0) on SSHService ssh-connection on HoneyPotTransport,3,127.0.0.1] remote close
+2014-06-25 02:20:14-0700 [HoneyPotTransport,3,127.0.0.1] Got remote error, code 11
+	reason: disconnected by user
+2014-06-25 02:20:14-0700 [HoneyPotTransport,3,127.0.0.1] connection lost
+2014-06-25 02:20:14-0700 [HoneyPotTransport,3,127.0.0.1] publishing metadata to hpfeeds

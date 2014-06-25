@@ -143,13 +143,22 @@ class HoneyPotShell(object):
         self.runCommand()
 
     def showPrompt(self):
+        # Example: nas3:~#
+        #prompt = '%s:%%(path)s' % self.honeypot.hostname
+ 
+        # Example: root@nas3:~#  (More of a "Ubuntu" feel)
+        prompt = '%s@%s:%%(path)s' % (self.honeypot.user.username, self.honeypot.hostname,)
+
+        # Example: [root@localhost ~]#  (More of a "CentOS" feel)
+        #prompt = '[%s@%s %%(currentfolder)s]' % (self.honeypot.user.username, self.honeypot.hostname,)
+ 
         if (self.honeypot.execcmd != None):
             return
 
         if not self.honeypot.user.uid:
-            prompt = '%s:%%(path)s# ' % self.honeypot.hostname
+            prompt += '#'
         else:
-            prompt = '%s:%%(path)s$ ' % self.honeypot.hostname
+            prompt += '$'
 
         path = self.honeypot.cwd
         homelen = len(self.honeypot.user.home)
@@ -159,7 +168,8 @@ class HoneyPotShell(object):
                 path[:(homelen+1)] == self.honeypot.user.home + '/':
             path = '~' + path[homelen:]
 
-        attrs = {'path': path}
+        #currentfolder=path.split(/)[-1]
+        attrs = {'path': path} #,'currentfolder': currentfolder
         self.honeypot.terminal.write(prompt % attrs)
 
     def ctrl_c(self):
