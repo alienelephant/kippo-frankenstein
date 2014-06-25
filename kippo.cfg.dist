@@ -206,3 +206,13 @@ interact_port = 5123
 
 #[database_textlog]
 #logfile = kippo-textlog.log
+
+# hpfeeds logging
+# See https://github.com/threatstream/mhn to setup your own hpfeeds server
+# Note to use the hpfeeds.honeycloud.net server, you'll need to signup and get a key
+#[database_hpfeeds]
+#server = hpfeeds.honeycloud.net
+#port = 10000
+#identifier = df6uh@hp1
+#secret = <secret>
+#debug=true
