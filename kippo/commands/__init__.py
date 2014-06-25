@@ -5,6 +5,7 @@ __all__ = [
     'base',
     'ls',
     'env',
+    'which',
     'ping',
     'ssh',
     'tar',
