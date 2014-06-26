@@ -8,39 +8,58 @@ from kippo.core.honeypot import HoneyPotCommand
 commands = {}
 clist = []
 
-class command_orly(HoneyPotCommand):
+class command_prompt01(HoneyPotCommand):
     def start(self):
-        self.orly()
-
-    def orly(self):
-        self.writeln('  ___ ')
-        self.writeln(' {o,o}')
-        self.writeln(' |)__)')
-        self.writeln(' -"-"-')
-        self.write('O RLY? ')
+        self.write('Are you sure? [y/N]: ')
 
     def lineReceived(self, data):
-        if data.strip().lower() in ('ya', 'yarly', 'ya rly', 'yes', 'y'):
-            self.writeln('  ___')
-            self.writeln(' {o,o}')
-            self.writeln(' (__(|')
-            self.writeln(' -"-"-')
-            self.writeln('NO WAI!')
-            self.exit()
-            return
-        self.orly()
-clist.append(command_orly)
-
-class command_wargames(HoneyPotCommand):
-    def start(self):
-        self.write('Shall we play a game? ')
-
-    def lineReceived(self, data):
-        self.writeln('A strange game. ' + \
-            'The only winning move is not to play.  ' + \
-            'How about a nice game of chess?')
+        self.writeln('Interrupted system call')
         self.exit()
-clist.append(command_wargames)
+clist.append(command_prompt01)
+
+class command_prompt02(HoneyPotCommand):
+    def start(self):
+        self.write('> ')
+
+    def lineReceived(self, data):
+        self.writeln('Function not implemented')
+        self.exit()
+clist.append(command_prompt02)
+
+class command_ioerr(HoneyPotCommand):
+    def call(self):
+        self.writeln('I/O error')
+clist.append(command_ioerr)
+
+class command_needlib(HoneyPotCommand):
+    def call(self):
+        self.writeln('Can not access a needed shared library')
+clist.append(command_needlib)
+
+class command_toomanylib(HoneyPotCommand):
+    def call(self):
+        self.writeln('Attempting to link in too many shared libraries')
+clist.append(command_toomanylib)
+
+class command_nomem(HoneyPotCommand):
+    def call(self):
+        self.writeln('Out of memory')
+clist.append(command_nomem)
+
+class command_noop(HoneyPotCommand):
+    def call(self):
+        self.writeln('Operation not permitted')
+clist.append(command_noop)
+
+class command_noperm(HoneyPotCommand):
+    def call(self):
+        self.writeln('Permission denied')
+clist.append(command_noperm)
+
+class command_segfault(HoneyPotCommand):
+    def call(self):
+        self.writeln('Segmentation fault')
+clist.append(command_segfault)
 
 class command_libgnome(HoneyPotCommand):
     def call(self):
