@@ -156,9 +156,9 @@ class HoneyPotShell(object):
             return
 
         if not self.honeypot.user.uid:
-            prompt += '#'
+            prompt += '# '
         else:
-            prompt += '$'
+            prompt += '$ '
 
         path = self.honeypot.cwd
         homelen = len(self.honeypot.user.home)
