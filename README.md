@@ -22,3 +22,5 @@ When this acutally works I'll create a real readme. Until that time, don't use t
 4. Add empty output for commands: bash -c, umask, alias
 5. Removed 'exxxit' command
 6. Added prompt patches from https://github.com/g0tmi1k/kippo-patches/blob/master/shell_prompt.patch
+7. Added realistic errors when executables are run (patched dice.py from https://github.com/toringe/kippomutate/blob/master/kippomutate.sh)
+8. Added a setup.sh file which mutates the kippo.cfg and some output from commands (modified from https://github.com/toringe/kippomutate/blob/master/kippomutate.sh)
