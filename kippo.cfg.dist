@@ -213,6 +213,6 @@ interact_port = 5123
 #[database_hpfeeds]
 #server = hpfeeds.honeycloud.net
 #port = 10000
-#identifier = df6uh@hp1
-#secret = <secret>
+#identifier = <ident>
+#secret = <secret? 
 #debug=true
